@@ -1,26 +1,56 @@
+version: 2.1
 jobs:
-  build:
+  preview_deployment:
     docker:
-      #specify the version you desire here
-      - image: circleci/node: 8.11
-
-    working_directory: ~/repo
-
+      - image: circleci/node:latest
+    environment:
+      VERCEL_ORG_ID: $VERCEL_ORG_ID
+      VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
     steps:
-      -checkout
+      - checkout
+      - run:
+          name: Install Vercel CLI
+          command: npm install --global vercel@latest
+      - run:
+          name: Pull Vercel Environment Information
+          command: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+      - run:
+          name: Build Project Artifacts
+          command: vercel build --token=$VERCEL_TOKEN
+      - run:
+          name: Deploy Project Artifacts to Vercel
+          command: vercel deploy --prebuilt --token=$VERCEL_TOKEN
 
-      #download and cache the dependencies
-      -restore_cache:
-          keys:
-            -v1 dependencies-{{checksum "package.json"}}
-            #fallback to using the latest cache if no exact match is found
-            -vi dependencies-
-          -run : yarn install
+  production_deployment:
+    docker:
+      - image: circleci/node:latest
+    environment:
+      VERCEL_ORG_ID: $VERCEL_ORG_ID
+      VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+    steps:
+      - checkout
+      - run:
+          name: Install Vercel CLI
+          command: npm install --global vercel@latest
+      - run:
+          name: Pull Vercel Environment Information
+          command: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+      - run:
+          name: Build Project Artifacts
+          command: vercel build --prod --token=$VERCEL_TOKEN
+      - run:
+          name: Deploy Project Artifacts to Vercel
+          command: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
 
-          -save_cache:
-            paths:
-              -node_modules
-            key: v1-dependencies-{{checksum "package.json"}}
-
-            #run tests!
-            -run: yarn test
+workflows:
+  version: 2
+  preview_and_production:
+    jobs:
+      - preview_deployment:
+          filters:
+            branches:
+              ignore: /main/
+      - production_deployment:
+          filters:
+            branches:
+              only: /main/
