@@ -4,14 +4,12 @@ jobs:
     docker:
       - image: circleci/node:latest
     environment:
-      VERCEL_ORG_ID: team_Wk4A5bq2EFL0uZTwfMTv9Trr
-      VERCEL_PROJECT_ID: prj_ASc4ixhbTC18VrlzI8kFb5Q1joCC
       VERCEL_TOKEN: b3DAlk5Zr4ACGydtLTfzKnWs
     steps:
       - checkout
       - run:
           name: Install Vercel CLI
-          command: sudo npm install -g vercel
+          command: npm install -g vercel
       - run:
           name: Pull Vercel Environment Information
           command: vercel pull --yes --environment=preview --token=b3DAlk5Zr4ACGydtLTfzKnWs
@@ -26,14 +24,12 @@ jobs:
     docker:
       - image: circleci/node:latest
     environment:
-      VERCEL_ORG_ID: team_Wk4A5bq2EFL0uZTwfMTv9Trr
-      VERCEL_PROJECT_ID: prj_ASc4ixhbTC18VrlzI8kFb5Q1joCC
       VERCEL_TOKEN: b3DAlk5Zr4ACGydtLTfzKnWs
     steps:
       - checkout
       - run:
           name: Install Vercel CLI
-          command:  npm install -g vercel
+          command:  npm install -g vercel 
       - run:
           name: Pull Vercel Environment Information
           command: vercel pull --yes --environment=production --token=b3DAlk5Zr4ACGydtLTfzKnWs
