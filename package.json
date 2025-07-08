@@ -19,6 +19,7 @@
   "homepage": "https://github.com/OriginCodeAcademy/startnow-ops200-deliver-it-well#readme",
   "dependencies": {
     "express": "^4.15.4",
+    "npx": "^10.2.2",
     "vercel": "^44.2.13"
   },
   "devDependencies": {
